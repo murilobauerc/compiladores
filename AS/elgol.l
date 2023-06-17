@@ -2,8 +2,8 @@
    /* definitions */
 %}
 
-%% 
 /* Aqui definimos as regras do nosso analisador léxico baseado nas propriedades da linguagem Elgol */
+%% 
 
 [A-Z][A-Z]{2,}   { printf("Identificador: %s\n", yytext); }
 [1-9][0-9]*   { printf("Numero inteiro: %s\n", yytext); }
