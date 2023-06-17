@@ -3,34 +3,49 @@
 #include <stdlib.h>
 #include "elgol.tab.h"
 
-int Lixo;
-int Teste;
-
-void execute_command(int command_type) {
+void execute_command(int command_type, char* arg1, char* arg2) {
     switch (command_type) {
         case IDENTIFICADOR:
-            printf("Identificador: %s\n", $1);
+            printf("Identificador: %s\n", arg1);
             break;
         case NUMERO:
-            printf("Número: %s\n", $1);
+            printf("Número: %s\n", arg1);
             break;
         case ATRIBUICAO:
-            printf("Atribuição: %s = %s\n", $1, $3);
+            printf("Atribuição: %s = %s\n", arg1, arg2);
             break;
         case CONDICIONAL:
-            printf("Condicional: se %s > zero\n", $2);
+            printf("Condicional: se %s > zero\n", arg1);
             break;
         case REPETICAO:
-            printf("Repetição: enquanto %s < %s\n", $2, $4);
+            printf("Repetição: enquanto %s < %s\n", arg1, arg2);
             break;
         case OPERADOR:
-            printf("Operador: %s\n", $1);
+            printf("Operador: %s\n", arg1);
             break;
         case PONTO:
             printf("Ponto: .\n");
             break;
+        case INICIO:
+            printf("Inicio\n");
+            break;
+        case FIM:
+            printf("Fim\n");
+            break;
+        case MAIOR:
+            printf("Maior\n");
+            break;
+        case MENOR:
+            printf("Menor\n");
+            break;
+        case IGUAL:
+            printf("Igual\n");
+            break;
+        case DIFERENTE:
+            printf("Diferente\n");
+            break;
         default:
-            printf("Nao é uma expressao válida na linguagem Elgol: %s\n", yytext);
+            printf("Não é uma expressão válida na linguagem Elgol: %s\n", yytext);
             break;
     }
 }
@@ -67,34 +82,33 @@ comando: atribuicao PONTO
        | repeticao
        ;
 
-atribuicao: IDENTIFICADOR '=' expressao
+atribuicao: IDENTIFICADOR '=' expressao PONTO
           {
-            execute_command(ATRIBUICAO);
+            execute_command(ATRIBUICAO, $1, $3);
           }
           ;
 
-condicional: SE expressao MAIOR ZERO ENTAO INICIO comandos FIM
+condicional: SE expressao MAIOR ZERO ENTAO PONTO
             {
-              execute_command(CONDICIONAL);
+              execute_command(CONDICIONAL, $2, "zero");
             }
             ;
 
-repeticao: ENQUANTO expressao MENOR NUMERO INICIO comandos FIM
+repeticao: ENQUANTO expressao MENOR expressao PONTO
           {
-            execute_command(REPETICAO);
+            execute_command(REPETICAO, $2, $4);
           }
           ;
 
-expressao: expressao '+' expressao
+expressao: IDENTIFICADOR
+         | expressao '+' expressao
          | expressao '-' expressao
          | expressao 'x' expressao
          | expressao '/' expressao
-         | NUMERO
-         | IDENTIFICADOR
-         | IDENTIFICADOR '(' expressoes ')'
+         | IDENTIFICADOR '(' expressoes ')' 
          ;
 
-expressoes: expressoes ',' expressao
+expressoes: expressao ',' expressoes
           | expressao
           ;
 
