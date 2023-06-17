@@ -22,9 +22,11 @@ menor         { printf("Palavra Reservada: menor\n"); }
 igual         { printf("Palavra Reservada: igual\n"); }
 diferente     { printf("Palavra Reservada: diferente\n"); }
 [-+=x/]       { printf("Operador: %c\n", yytext[0]); }
+\(            { printf("Abre parênteses\n"); }
+\)            { printf("Fecha parênteses\n"); }
 \.            { printf("Ponto: .\n"); }
 #.*           { /* Ignorar comentários */ }
-.+            { printf("Nao é uma expressao válida na linguagem Elgol: %s\n", yytext); }
+.            { printf("Nao é uma expressao válida na linguagem Elgol: %s\n", yytext); }
 \n            {return 0;}
 
 %%
