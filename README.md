@@ -19,6 +19,12 @@ Para executar o trabalho final da AS com Flex (analisador léxico):
 
 2. Executar em um terminal:
 
+Acessar a pasta do projeto:
+
+```sh
+cd compiladores/AS
+```
+
 Para executar o flex e gerar o código em C:
 
 ```sh
@@ -34,5 +40,5 @@ gcc lex.yy.c -o elgol
 Para executar o arquivo compilado:
 
 ```sh
-- ./elgol
+./elgol
 ```
