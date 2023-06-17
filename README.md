@@ -1,7 +1,3 @@
-# Disciplina de Compiladores ministrada pelo Professor Elgio Schlemer
-
-## Aluno: Murilo Bauer Cardoso da Rosa
-
 ### Como executar exercício AP1
 
 Pré-requisitos:
