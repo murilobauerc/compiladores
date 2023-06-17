@@ -1,11 +1,30 @@
-# compiladores
+# Disciplina de Compiladores ministrada pelo Professor Elgio Schlemer
+
+## Aluno: Murilo Bauer Cardoso da Rosa
+
+### Como executar exercício AP1
 
 Pré-requisitos:
 
-- Elixir (https://elixir-lang.org/install.html)
-
-Para rodar o projeto:
+- Instalar Elixir (https://elixir-lang.org/install.html)
+- Executar:
 
 ```bash
-elixir compiladores_ex2.ex
+cd compiladores/ap1 && elixir compiladores_ex2.ex
+```
+
+### Como executar Trabalho Final de Compiladores
+
+Para executar o trabalho final da AS com Flex (analisador léxico):
+
+1. Pré requisitos:
+
+   - Instalar flex (no macOS `brew install flex`)
+
+2. Executar em uma linha de comando:
+
+```bash
+- flex elgol.l (gera lex.yy.c)
+- gcc lex.yy.c -o elgol
+- ./elgol
 ```

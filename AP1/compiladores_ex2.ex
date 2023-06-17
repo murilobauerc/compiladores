@@ -19,14 +19,14 @@ defmodule Simbolos do
     cond do
       Regex.match?(~r/^(int|double|char|float|if|while|for)$/, token) -> {:reservada, token}
       Regex.match?(~r/^[A-Z][A-Za-z]*$/, token) -> {:identificador, token}
-      Regex.match?(~r/^(\d+(,\d+)?|\d+)\)?$/, token) -> {:número, token}
+      Regex.match?(~r/^([0-9]+(,[0-9]+)?|[0-9]+)\)?$/ , token) -> {:número, token}
       true -> nil # Token inválido
     end
   end
 
   def generate_symbol_table(tokens) do
     tokens
-    |> Enum.reduce(%{}, fn {type, value}, acc ->
+    |> Enum.reduce(%{}, fn {type, value}, acc ->  
       Map.update(acc, value, type, fn existing_type ->
         if existing_type == type, do: existing_type, else: :erro
       end)
@@ -43,18 +43,28 @@ defmodule Simbolos do
   end
 
   def main do
-    IO.puts("Digite o caminho completo para o arquivo a ser lido:")
-    IO.puts("EXEMPLO: /home/usuario/arquivo.txt")
-    file_path = IO.gets("") |> String.trim()
+    input = """
+      int Teste
+      double lixo
+      int Outroteste
+      char Lixo
+      double teste
+      int teste
+      float test
+      float Test
 
-    case File.read(file_path) do
-      {:ok, file_content} ->
-        tokens = Simbolos.tokenize(file_content)
-        symbol_table = Simbolos.generate_symbol_table(tokens)
-        Simbolos.print_symbol_table(symbol_table)
-      {:error, reason} ->
-        IO.puts("Erro ao ler arquivo: #{reason}")
-    end
+      Lixo = 45
+
+      Mesmo = 34,567
+
+      while ( Mesmo < 600 )
+    """
+
+    IO.puts("Executando o código para a entrada #{input}:")
+
+    tokens = Simbolos.tokenize(input)
+    symbol_table = Simbolos.generate_symbol_table(tokens)
+    Simbolos.print_symbol_table(symbol_table)
   end
 end
 
