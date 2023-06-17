@@ -17,16 +17,22 @@ Para executar o trabalho final da AS com Flex (analisador léxico):
 
    - Instalar flex (no macOS `brew install flex`)
 
-2. Executar em um terminal os seguintes comandos:
+2. Executar em um terminal:
 
-```bash
-flex elgol.l (gera lex.yy.c)
+Para executar o flex e gerar o código em C:
+
+```sh
+flex elgol.l
 ```
 
-```bash
+Para compilar o arquivo compilado pelo flex:
+
+```sh
 gcc lex.yy.c -o elgol
 ```
 
-```bash
+Para executar o arquivo compilado:
+
+```sh
 - ./elgol
 ```
