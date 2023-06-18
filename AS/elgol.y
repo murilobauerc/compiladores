@@ -19,23 +19,34 @@ void yyerror(const char* s);
 %token OP_ATRIBUICAO OP_SOMA OP_SUBTRACAO OP_MULTIPLICACAO OP_DIVISAO ABRE_PARENTESES FECHA_PARENTESES
 %token MAIOR MENOR IGUAL DIFERENTE ZERO INTEIRO PONTO
 %token ENQUANTO SE ENTAO SENAO INICIO FIM
-%token EXIT
+%token EXIT NOVA_LINHA
 
-%type<sval> programa declaracoes comandos comando atribuicao expressao
+%type<sval> programa linha declaracao comandos comando atribuicao condicional expressao
 
 %start programa
 
 %%
 
-programa:
-    | programa declaracoes comandos
+programa: /* vazio */ {}
+    | programa linha 
     ;
 
-declaracoes: declaracao
-    | declaracoes declaracao
-    ;
+linha: expressao NOVA_LINHA
+     | NOVA_LINHA
+     ;
+
+expressao: declaracao
+         | atribuicao
+         | condicional
+         ;
 
 declaracao: INTEIRO IDENTIFICADOR PONTO
+    ;
+
+atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao    
+
+condicional: SE expressao ENTAO comandos FIM
+    | SE expressao ENTAO comandos SENAO comandos FIM
     ;
 
 comandos: comando PONTO
@@ -43,12 +54,6 @@ comandos: comando PONTO
     ;
 
 comando: atribuicao
-    ;
-
-atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
-    {
-        printf("Atribuição: %s = %d\n", $1, $3);
-    }
     ;
 
 expressao: IDENTIFICADOR { $$ = $1; }
