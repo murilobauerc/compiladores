@@ -31,6 +31,12 @@ Para executar o Flex/Bison, use o Makefile como guia:
 make all
 ```
 
+Depois só executar o arquivo de entrada, exemplo:
+
+```sh
+./elgol meu_codigo_elgol.txt
+```
+
 6. Coloque como entrada o código Elgol, exemplo:
 
 ```text
