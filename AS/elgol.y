@@ -10,8 +10,8 @@ void yyerror(const char* s);
 %}
 
 %union {
-	char* sval;
-	int ival;
+    char* sval;
+    int ival;
 }
 
 %token<sval> IDENTIFICADOR FUNCAO
@@ -20,92 +20,45 @@ void yyerror(const char* s);
 %token MAIOR MENOR IGUAL DIFERENTE ZERO INTEIRO PONTO
 %token ENQUANTO SE ENTAO SENAO INICIO FIM
 %token EXIT
-%left OP_SOMA OP_SUBTRACAO
-%left OP_MULTIPLICACAO OP_DIVISAO
 
-%type<sval> expressao
+%type<sval> programa declaracoes comandos comando atribuicao expressao
 
 %start programa
 
 %%
 
 programa:
-	| programa declaracoes comandos
-	;
+    | programa declaracoes comandos
+    ;
 
-declaracoes:
-	| declaracoes declaracao
-	;
+declaracoes: declaracao
+    | declaracoes declaracao
+    ;
 
-declaracao:
-	INTEIRO IDENTIFICADOR PONTO
-	;
+declaracao: INTEIRO IDENTIFICADOR PONTO
+    ;
 
-comandos:
-	| comandos comando
-	;
+comandos: comando PONTO
+    | comandos comando PONTO
+    ;
 
-comando:
-	atribuicao PONTO
-	| condicional
-	| repeticao
-	;
+comando: atribuicao
+    ;
 
-atribuicao:
-	IDENTIFICADOR '=' expressao
-	{
-		printf("Atribuição: %s = %s\n", $1, $3);
-	}
-	;
+atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
+    {
+        printf("Atribuição: %s = %d\n", $1, $3);
+    }
+    ;
 
-condicional:
-	SE expressao MAIOR ZERO
-	{
-		printf("Condicional: se %s > zero\n", $2);
-	}
-	;
-
-repeticao:
-	ENQUANTO expressao MENOR expressao
-	{
-		printf("Repetição: enquanto %s < %s\n", $2, $4);
-	}
-	;
-
-expressao:
-	IDENTIFICADOR
-	{
-		$$ = $1;
-	}
-	| NUMERO
-	{
-		$$ = $1;
-	}
-	| expressao OP_SOMA expressao
-	{
-		$$ = $1;
-		printf("Operador: +\n");
-	}
-	| expressao OP_SUBTRACAO expressao
-	{
-		$$ = $1;
-		printf("Operador: -\n");
-	}
-	| expressao OP_MULTIPLICACAO expressao
-	{
-		$$ = $1;
-		printf("Operador: x\n");
-	}
-	| expressao OP_DIVISAO expressao
-	{
-		$$ = $1;
-		printf("Operador: /\n");
-	}
-	| ABRE_PARENTESES expressao FECHA_PARENTESES
-	{
-		$$ = $2;
-	}
-	;
+expressao: IDENTIFICADOR { $$ = $1; }
+    | NUMERO { $$ = $1; }
+    | expressao OP_SOMA expressao { $$ = $1 + $3; }
+    | expressao OP_SUBTRACAO expressao { $$ = $1 - $3; }
+    | expressao OP_MULTIPLICACAO expressao { $$ = $1 * $3; }
+    | expressao OP_DIVISAO expressao { $$ = $1 / $3; }
+    | ABRE_PARENTESES expressao FECHA_PARENTESES
+    ;
 
 %%
 
@@ -129,7 +82,8 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
 void yyerror(const char* s) {
-	fprintf(stderr, "Parse error: %s\n", s);
-	exit(1);
+    fprintf(stderr, "Parse error: %s\n", s);
+    exit(1);
 }
