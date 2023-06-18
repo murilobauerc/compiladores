@@ -1,7 +1,7 @@
 inteiro Lixo. # minha variavel
 inteiro Teste.
 Lixo = 34.
-se Lixo maior zero.
+se Lixo maior 30.
 entao.
 inicio.
         Lixo = zero.

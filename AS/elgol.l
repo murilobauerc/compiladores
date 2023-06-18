@@ -21,7 +21,7 @@ espaco [ \t]+
 {numero}            {yylval.ival = atoi(yytext); return NUMERO;}
 {funcao}            {yylval.sval = strdup(yytext); return FUNCAO;}
 
-"\n"                { return NOVA_LINHA; }
+\n                { return FIM_LINHA; }
 "inteiro"           { return INTEIRO; }
 "zero"              { return ZERO; }
 "enquanto"          { return ENQUANTO; }
@@ -42,7 +42,6 @@ espaco [ \t]+
 "+"                 { return OP_SOMA; }
 "x"                 { return OP_MULTIPLICACAO; }
 "/"                 { return OP_DIVISAO; }
-"exit"              { return EXIT; }
 "#"(.)*\n           /* Descartar comentários */
 
 %%
