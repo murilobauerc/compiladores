@@ -11,17 +11,15 @@
 identificador [A-Z][A-Za-z]{2,}
 numero [1-9][0-9]*
 funcao _[A-Z][A-Za-z]{2,}
-espaco [ \t]+
+espaco [\t]+
 
 %%
 {espaco}            /* ignorar espaços em branco e tabulações */
 
-
 {identificador}      {yylval.sval = strdup(yytext); return IDENTIFICADOR;}
-{numero}            {yylval.ival = atoi(yytext); return NUMERO;}
+{numero}            {yylval.sval = strdup(yytext); return NUMERO;}
 {funcao}            {yylval.sval = strdup(yytext); return FUNCAO;}
 
-\n                { return FIM_LINHA; }
 "inteiro"           { return INTEIRO; }
 "zero"              { return ZERO; }
 "enquanto"          { return ENQUANTO; }
@@ -34,6 +32,7 @@ espaco [ \t]+
 "menor"             { return MENOR; }
 "igual"             { return IGUAL; }
 "diferente"         { return DIFERENTE; }
+"elgio"             { return ELGIO; }
 "."                 { return PONTO; }
 "("                 { return ABRE_PARENTESES; }
 ")"                 { return FECHA_PARENTESES; }

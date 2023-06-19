@@ -14,15 +14,12 @@ void yyerror(const char* s);
     int ival;
 }
 
-%token<sval> IDENTIFICADOR FUNCAO ELGIO
-%token<ival> NUMERO
+%token<sval> IDENTIFICADOR FUNCAO ELGIO NUMERO ZERO
 %token OP_ATRIBUICAO OP_SOMA OP_SUBTRACAO OP_MULTIPLICACAO OP_DIVISAO ABRE_PARENTESES FECHA_PARENTESES
-%token MAIOR MENOR IGUAL DIFERENTE ZERO INTEIRO PONTO
+%token MAIOR MENOR IGUAL DIFERENTE INTEIRO PONTO
 %token ENQUANTO SE ENTAO SENAO INICIO FIM
-%token FIM_LINHA
 
-%type<sval> programa linha declaracao comandos comando atribuicao condicional op_relacional elgol 
-%type<ival> expressao
+%type<sval> programa linha declaracao comandos comando atribuicao condicional elgol expressao tipo_expressao
 
 %start programa
 
@@ -32,12 +29,13 @@ programa: /* vazio */
         | programa linha 
         ;
 
-linha: expressao
-     | expressao PONTO linha
-     | FIM_LINHA
+linha: 
+     | tipo_expressao resto
      ;
 
-expressao: declaracao
+resto: PONTO linha
+
+tipo_expressao: declaracao
          | atribuicao
          | condicional
          | elgol
@@ -46,33 +44,39 @@ expressao: declaracao
 elgol: ELGIO { $$ = $1; }
      ;
 
-declaracao: INTEIRO IDENTIFICADOR PONTO { printf("inteiro %s. \n", $2); }
+declaracao: INTEIRO IDENTIFICADOR
           ;
 
-atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao { printf("%s = %d. \n", $1, $3); }
+atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
           | FUNCAO OP_ATRIBUICAO expressao { yyerror("Uma função não pode ser alvo de uma atribuição."); }
           ;
 
-condicional: SE expressao op_relacional expressao PONTO FIM_LINHA ENTAO PONTO FIM_LINHA INICIO PONTO FIM_LINHA comandos FIM_LINHA FIM PONTO FIM_LINHA { printf("se %s %s %s entao\n", $2, $3, $4); }
+condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM 
+            | SE expressao MENOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
+            | SE expressao IGUAL expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
+            | SE expressao DIFERENTE expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM      
            ;
 
-op_relacional: MAIOR | MENOR | IGUAL | DIFERENTE ;
-
-comandos: comando PONTO
+comandos: /* vazio */ 
+        | comando PONTO
         | comandos comando PONTO
         ;
 
 comando: atribuicao
        ;
 
-expressao: IDENTIFICADOR { $$ = $1; }
-         | FUNCAO { $$ = $1; }
-         | NUMERO { $$ = $1; }
+expressao: 
+        /* CORRIGIR AQUI
          | expressao OP_SOMA expressao { $$ = $1 + $3; }
          | expressao OP_SUBTRACAO expressao { $$ = $1 - $3; }
          | expressao OP_MULTIPLICACAO expressao { $$ = $1 * $3; }
          | expressao OP_DIVISAO expressao { $$ = $1 / $3; }
+        */
          | ABRE_PARENTESES expressao FECHA_PARENTESES { $$ = $2; }
+         | ZERO { $$ = $1; }
+         | IDENTIFICADOR { $$ = $1; }
+         | FUNCAO { $$ = $1; }
+         | NUMERO { $$ = $1; }
          ;
 
 %%
@@ -92,6 +96,8 @@ int main(int argc, char* argv[]) {
     yyin = input_file;
 
     yyparse();
+
+    printf("Parse feito com sucesso!\n");
 
     fclose(input_file);
 
