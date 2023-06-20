@@ -34,6 +34,7 @@ espaco [\t]+
 "diferente"         { return DIFERENTE; }
 "elgio"             { return ELGIO; }
 "."                 { return PONTO; }
+","                 { return VIRGULA;}
 "("                 { return ABRE_PARENTESES; }
 ")"                 { return FECHA_PARENTESES; }
 "="                 { return OP_ATRIBUICAO; }

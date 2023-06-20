@@ -6,8 +6,11 @@ entao.
 inicio.
    Lixo = zero.
    Teste = 20.
+   Teste = Aba + Breca x 45.
 fim.
 senao.
 inicio.
 fim.
 Lixo = zero.
+Aba = Lixo + Breca + zero - 45 / 5.
+inteiro _Soma (inteiro Dois, inteiro Tres, inteiro Quatro).

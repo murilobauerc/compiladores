@@ -16,10 +16,10 @@ void yyerror(const char* s);
 
 %token<sval> IDENTIFICADOR FUNCAO ELGIO NUMERO ZERO
 %token OP_ATRIBUICAO OP_SOMA OP_SUBTRACAO OP_MULTIPLICACAO OP_DIVISAO ABRE_PARENTESES FECHA_PARENTESES
-%token MAIOR MENOR IGUAL DIFERENTE INTEIRO PONTO
+%token MAIOR MENOR IGUAL DIFERENTE INTEIRO PONTO VIRGULA
 %token ENQUANTO SE ENTAO SENAO INICIO FIM
 
-%type<sval> programa linha declaracao comandos comando atribuicao condicional elgol expressao tipo_expressao
+%type<sval> programa linha declaracao comandos comando atribuicao condicional elgol tipo_expressao expressao
 
 %start programa
 
@@ -38,6 +38,7 @@ resto: PONTO linha
 tipo_expressao: declaracao
          | atribuicao
          | condicional
+         | funcao
          | elgol
          ;
 
@@ -51,10 +52,18 @@ atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
           | FUNCAO OP_ATRIBUICAO expressao { yyerror("Uma função não pode ser alvo de uma atribuição."); }
           ;
 
-condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM 
+condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM
             | SE expressao MENOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
             | SE expressao IGUAL expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
             | SE expressao DIFERENTE expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM      
+           ;
+
+funcao: INTEIRO FUNCAO ABRE_PARENTESES parametros FECHA_PARENTESES 
+      ;
+
+parametros: /* vazio */
+           | declaracao
+           | parametros VIRGULA declaracao
            ;
 
 comandos: /* vazio */ 
@@ -66,12 +75,10 @@ comando: atribuicao
        ;
 
 expressao: 
-        /* CORRIGIR AQUI
-         | expressao OP_SOMA expressao { $$ = $1 + $3; }
-         | expressao OP_SUBTRACAO expressao { $$ = $1 - $3; }
-         | expressao OP_MULTIPLICACAO expressao { $$ = $1 * $3; }
-         | expressao OP_DIVISAO expressao { $$ = $1 / $3; }
-        */
+         | expressao OP_SOMA expressao { $1; $3; }
+         | expressao OP_SUBTRACAO expressao { $1; $3; }
+         | expressao OP_MULTIPLICACAO expressao { $1; $3; }
+         | expressao OP_DIVISAO expressao { $1; $3; }
          | ABRE_PARENTESES expressao FECHA_PARENTESES { $$ = $2; }
          | ZERO { $$ = $1; }
          | IDENTIFICADOR { $$ = $1; }
