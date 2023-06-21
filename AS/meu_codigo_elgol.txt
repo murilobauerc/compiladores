@@ -1,9 +1,9 @@
 inteiro Lixo. # minha variavel
 inteiro Teste.
-Lixo = 34.
+Lixo = 425004.
 se Lixo maior zero.
 entao.
-inicio.
+inicio. # inicio do condicional
    Lixo = zero.
    Teste = 20.
    Teste = Aba + Breca x 45.
@@ -14,3 +14,7 @@ fim.
 Lixo = zero.
 Aba = Lixo + Breca + zero - 45 / 5.
 inteiro _Soma (inteiro Dois, inteiro Tres, inteiro Quatro).
+enquanto Teste maior zero.
+inicio.
+ Teste = Murilo + 3.
+fim.

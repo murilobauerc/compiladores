@@ -5,20 +5,26 @@
 
 #define YY_DECL int yylex()
 
+void yyerror(const char* s);
+
 #include "elgol.tab.h"
 %}
 
 identificador [A-Z][A-Za-z]{2,}
-numero [1-9][0-9]*
+numero [1-9][0-9]*|0
 funcao _[A-Z][A-Za-z]{2,}
 espaco [\t]+
+
+numero_invalido [0-9]+[A-Za-z]+
 
 %%
 {espaco}            /* ignorar espaços em branco e tabulações */
 
 {identificador}      {yylval.sval = strdup(yytext); return IDENTIFICADOR;}
-{numero}            {yylval.sval = strdup(yytext); return NUMERO;}
+{numero}            {yylval.ival = atoi(yytext); return NUMERO;}
 {funcao}            {yylval.sval = strdup(yytext); return FUNCAO;}
+  
+{numero_invalido}  { yyerror("Número inválido."); }
 
 "inteiro"           { return INTEIRO; }
 "zero"              { return ZERO; }
