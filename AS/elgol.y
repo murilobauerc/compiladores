@@ -53,12 +53,6 @@ atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
           | FUNCAO OP_ATRIBUICAO expressao { yyerror("Uma função não pode ser alvo de uma atribuição."); }
           ;
 
-laco: ENQUANTO expressao MAIOR expressao PONTO INICIO PONTO comandos FIM
-    | ENQUANTO expressao MENOR expressao PONTO INICIO PONTO comandos FIM
-    | ENQUANTO expressao IGUAL expressao PONTO INICIO PONTO comandos FIM
-    | ENQUANTO expressao DIFERENTE expressao PONTO INICIO PONTO comandos FIM
-    ;
-
 condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM
             | SE expressao MENOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
             | SE expressao IGUAL expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
@@ -67,6 +61,12 @@ condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comando
 
 funcao: INTEIRO FUNCAO ABRE_PARENTESES parametros FECHA_PARENTESES 
       ;
+
+laco: ENQUANTO expressao MAIOR expressao PONTO INICIO PONTO comandos FIM
+    | ENQUANTO expressao MENOR expressao PONTO INICIO PONTO comandos FIM
+    | ENQUANTO expressao IGUAL expressao PONTO INICIO PONTO comandos FIM
+    | ENQUANTO expressao DIFERENTE expressao PONTO INICIO PONTO comandos FIM
+    ;
 
 elgol: ELGIO { $$ = $1; }
      ;
@@ -84,7 +84,7 @@ comandos: /* vazio */
 comando: atribuicao
        ;
 
-expressao: | NUMERO { $$ = $1; }
+expressao: 
          | expressao OP_SOMA expressao { $1; $3; }
          | expressao OP_SUBTRACAO expressao { $1; $3; }
          | expressao OP_MULTIPLICACAO expressao { $1; $3; }
@@ -93,6 +93,7 @@ expressao: | NUMERO { $$ = $1; }
          | ZERO { $$ = $1; }
          | FUNCAO { $$ = $1; }
          | IDENTIFICADOR { $$ = $1; }
+         | NUMERO { $$ = $1; }
          ;
 
 %%

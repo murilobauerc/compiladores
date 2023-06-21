@@ -1,6 +1,6 @@
 inteiro Lixo. # minha variavel
 inteiro Teste.
-Lixo = 425004.
+Lixo = 4023930.
 se Lixo maior zero.
 entao.
 inicio. # inicio do condicional
