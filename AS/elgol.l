@@ -7,6 +7,9 @@
 
 void yyerror(const char* s);
 
+int recebe_numero_linha;
+int numero_linha;
+
 #include "elgol.tab.h"
 %}
 
@@ -18,7 +21,6 @@ espaco [\t]+
 numero_invalido [0-9]+[A-Za-z]+
 
 %%
-{espaco}            /* ignorar espaços em branco e tabulações */
 
 {identificador}      {yylval.sval = strdup(yytext); return IDENTIFICADOR;}
 {numero}            {yylval.ival = atoi(yytext); return NUMERO;}
@@ -48,6 +50,13 @@ numero_invalido [0-9]+[A-Za-z]+
 "+"                 { return OP_SOMA; }
 "x"                 { return OP_MULTIPLICACAO; }
 "/"                 { return OP_DIVISAO; }
-"#"(.)*\n           /* Descartar comentários */
+\n                  { numero_linha++; }
+"#"(.)*             /* Descartar comentários */
+
+{espaco}            /* ignorar espaços em branco e tabulações */
 
 %%
+
+int recebeNumeroLinha () {
+    return numero_linha;
+}

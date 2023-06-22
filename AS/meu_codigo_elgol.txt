@@ -1,6 +1,6 @@
 inteiro Lixo. # minha variavel
 inteiro Teste.
-Lixo = 4023930.
+Lixo = 4012302302323.
 se Lixo maior zero.
 entao.
 inicio. # inicio do condicional
@@ -13,8 +13,12 @@ inicio.
 fim.
 Lixo = zero.
 Aba = Lixo + Breca + zero - 45 / 5.
-inteiro _Soma (inteiro Dois, inteiro Tres, inteiro Quatro).
+inteiro _Soma ().
 enquanto Teste maior zero.
 inicio.
  Teste = Murilo + 3.
+fim.
+inteiro _Murilo(inteiro VariavelUm, inteiro VariavelDois).
+inicio.
+   elgio = Murilo + VariavelDois.
 fim.

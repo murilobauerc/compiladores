@@ -6,6 +6,8 @@ extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
 
+int recebeNumeroLinha();
+
 void yyerror(const char* s);
 %}
 
@@ -20,7 +22,7 @@ void yyerror(const char* s);
 %token MAIOR MENOR IGUAL DIFERENTE INTEIRO PONTO VIRGULA
 %token ENQUANTO SE ENTAO SENAO INICIO FIM
 
-%type<sval> programa linha declaracao comandos comando atribuicao condicional laco elgol tipo_expressao expressao
+%type<sval> programa linha declaracao comandos comando atribuicao condicional laco elgol tipo_expressao expressao funcao parametros corpoDaFuncao
 
 %start programa
 
@@ -38,12 +40,12 @@ resto: PONTO linha
     ;
 
 tipo_expressao: declaracao
-         | atribuicao
-         | condicional
-         | funcao
-         | elgol
-         | laco
-         ;
+              | atribuicao
+              | condicional
+              | funcao 
+              | elgol
+              | laco
+              ;
 
 
 declaracao: INTEIRO IDENTIFICADOR
@@ -54,12 +56,15 @@ atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
           ;
 
 condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM
-            | SE expressao MENOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
-            | SE expressao IGUAL expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
-            | SE expressao DIFERENTE expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM      
+           | SE expressao MENOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
+           | SE expressao IGUAL expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM  
+           | SE expressao DIFERENTE expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM      
            ;
 
-funcao: INTEIRO FUNCAO ABRE_PARENTESES parametros FECHA_PARENTESES 
+funcao: INTEIRO FUNCAO ABRE_PARENTESES FECHA_PARENTESES 
+      | INTEIRO FUNCAO ABRE_PARENTESES FECHA_PARENTESES PONTO INICIO PONTO corpoDaFuncao FIM
+      | INTEIRO FUNCAO ABRE_PARENTESES parametros FECHA_PARENTESES PONTO INICIO PONTO corpoDaFuncao FIM
+      | INTEIRO FUNCAO ABRE_PARENTESES parametros FECHA_PARENTESES
       ;
 
 laco: ENQUANTO expressao MAIOR expressao PONTO INICIO PONTO comandos FIM
@@ -71,10 +76,14 @@ laco: ENQUANTO expressao MAIOR expressao PONTO INICIO PONTO comandos FIM
 elgol: ELGIO { $$ = $1; }
      ;
 
-parametros: /* vazio */
-           | declaracao
-           | parametros VIRGULA declaracao
-           ;
+corpoDaFuncao: /* vazio */
+               | tipo_expressao PONTO
+               | corpoDaFuncao tipo_expressao PONTO
+               ;
+
+parametros: declaracao
+          | declaracao VIRGULA parametros 
+          ;
 
 comandos: /* vazio */ 
         | comando PONTO
@@ -84,8 +93,7 @@ comandos: /* vazio */
 comando: atribuicao
        ;
 
-expressao: 
-         | expressao OP_SOMA expressao { $1; $3; }
+expressao: expressao OP_SOMA expressao { $1; $3; }
          | expressao OP_SUBTRACAO expressao { $1; $3; }
          | expressao OP_MULTIPLICACAO expressao { $1; $3; }
          | expressao OP_DIVISAO expressao { $1; $3; }
@@ -122,6 +130,6 @@ int main(int argc, char* argv[]) {
 }
 
 void yyerror(const char* s) {
-    fprintf(stderr, "Erro ao fazer a análise sintática na linha: %s\n", s);
+    fprintf(stderr, "Erro sintático na linha: %d\n", recebeNumeroLinha());
     exit(1);
 }
