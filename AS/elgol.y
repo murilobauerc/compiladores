@@ -99,16 +99,16 @@ comandos: /* vazio */
 comando: atribuicao
        ;
 
-expressao: expressao OP_SOMA expressao { $1; $3; }
-         | expressao OP_SUBTRACAO expressao { $1; $3; }
-         | expressao OP_MULTIPLICACAO expressao { $1; $3; }
-         | expressao OP_DIVISAO expressao { $1; $3; }
+expressao: expressao OP_SOMA expressao
+         | expressao OP_SUBTRACAO expressao 
+         | expressao OP_MULTIPLICACAO expressao
+         | expressao OP_DIVISAO expressao
          | funcaoOperando
          | ABRE_PARENTESES expressao FECHA_PARENTESES { $$ = $2; }
          | ZERO { $$ = $1; }
          | FUNCAO { $$ = $1; }
          | IDENTIFICADOR { $$ = $1; }
-         | NUMERO { $$ = $1; }
+         | NUMERO
          ;
 
 %%
