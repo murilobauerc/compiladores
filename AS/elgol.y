@@ -22,7 +22,7 @@ void yyerror(const char* s);
 %token MAIOR MENOR IGUAL DIFERENTE INTEIRO PONTO VIRGULA
 %token ENQUANTO SE ENTAO SENAO INICIO FIM
 
-%type<sval> programa linha declaracao comandos comando atribuicao condicional laco elgol tipo_expressao expressao funcao parametros corpoDaFuncao
+%type<sval> programa linha declaracao comandos comando atribuicao condicional laco elgol tipo_expressao expressao funcao parametros corpoDaFuncao funcaoOperando operandos
 
 %start programa
 
@@ -43,7 +43,6 @@ tipo_expressao: declaracao
               | atribuicao
               | condicional
               | funcao 
-              | elgol
               | laco
               ;
 
@@ -53,6 +52,7 @@ declaracao: INTEIRO IDENTIFICADOR
 
 atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
           | FUNCAO OP_ATRIBUICAO expressao { yyerror("Uma função não pode ser alvo de uma atribuição."); }
+          | ELGIO OP_ATRIBUICAO expressao
           ;
 
 condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM
@@ -61,10 +61,8 @@ condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comando
            | SE expressao DIFERENTE expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM      
            ;
 
-funcao: INTEIRO FUNCAO ABRE_PARENTESES FECHA_PARENTESES 
-      | INTEIRO FUNCAO ABRE_PARENTESES FECHA_PARENTESES PONTO INICIO PONTO corpoDaFuncao FIM
+funcao: INTEIRO FUNCAO ABRE_PARENTESES FECHA_PARENTESES PONTO INICIO PONTO corpoDaFuncao FIM
       | INTEIRO FUNCAO ABRE_PARENTESES parametros FECHA_PARENTESES PONTO INICIO PONTO corpoDaFuncao FIM
-      | INTEIRO FUNCAO ABRE_PARENTESES parametros FECHA_PARENTESES
       ;
 
 laco: ENQUANTO expressao MAIOR expressao PONTO INICIO PONTO comandos FIM
@@ -80,6 +78,14 @@ corpoDaFuncao: /* vazio */
                | tipo_expressao PONTO
                | corpoDaFuncao tipo_expressao PONTO
                ;
+
+funcaoOperando: FUNCAO ABRE_PARENTESES FECHA_PARENTESES
+                  | FUNCAO ABRE_PARENTESES operandos FECHA_PARENTESES
+                  ;
+
+operandos: expressao
+         | operandos VIRGULA expressao
+         ;
 
 parametros: declaracao
           | declaracao VIRGULA parametros 
@@ -97,6 +103,7 @@ expressao: expressao OP_SOMA expressao { $1; $3; }
          | expressao OP_SUBTRACAO expressao { $1; $3; }
          | expressao OP_MULTIPLICACAO expressao { $1; $3; }
          | expressao OP_DIVISAO expressao { $1; $3; }
+         | funcaoOperando
          | ABRE_PARENTESES expressao FECHA_PARENTESES { $$ = $2; }
          | ZERO { $$ = $1; }
          | FUNCAO { $$ = $1; }

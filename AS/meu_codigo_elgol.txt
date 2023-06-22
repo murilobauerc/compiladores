@@ -13,7 +13,10 @@ inicio.
 fim.
 Lixo = zero.
 Aba = Lixo + Breca + zero - 45 / 5.
-inteiro _Soma ().
+inteiro _Soma (inteiro Murilo).
+inicio.
+   Algumteste = 20.
+fim.
 enquanto Teste maior zero.
 inicio.
  Teste = Murilo + 3.
@@ -22,3 +25,4 @@ inteiro _Murilo(inteiro VariavelUm, inteiro VariavelDois).
 inicio.
    elgio = Murilo + VariavelDois.
 fim.
+Teste = 20 + _Soma (30, 40).
