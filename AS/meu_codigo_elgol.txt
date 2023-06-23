@@ -26,3 +26,17 @@ inicio.
    elgio = Murilo + VariavelDois.
 fim.
 Teste = 20 + _Soma (30, 40).
+inteiro _Soma (inteiro Num, inteiro Dois).
+inicio.
+    elgio = Num + Dois.
+fim.
+enquanto 30 maior 40.
+inicio.
+   Ulbra = 2 + 10 x 20 - 10 - 2 + 4.
+fim.
+inteiro _Fazalgo (inteiro Num, inteiro Dois).
+inicio.
+    inteiro Temp.
+    Temp = 20 x _Soma(Num, Dois).
+    elgio = Temp.
+fim.

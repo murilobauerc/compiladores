@@ -8,7 +8,7 @@
 void yyerror(const char* s);
 
 int recebe_numero_linha;
-int numero_linha;
+int numero_linha = 1;
 
 #include "elgol.tab.h"
 %}

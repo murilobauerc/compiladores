@@ -22,7 +22,7 @@ void yyerror(const char* s);
 %token MAIOR MENOR IGUAL DIFERENTE INTEIRO PONTO VIRGULA
 %token ENQUANTO SE ENTAO SENAO INICIO FIM
 
-%type<sval> programa linha declaracao comandos comando atribuicao condicional laco elgol tipo_expressao expressao funcao parametros corpoDaFuncao funcaoOperando operandos
+%type<sval> programa linha declaracao comandos comando atribuicao condicional laco elgol tipo_expressao expressao funcao parametros corpoDaFuncao funcaoOperando operandos expressao_matematica
 
 %start programa
 
@@ -52,7 +52,7 @@ declaracao: INTEIRO IDENTIFICADOR
 
 atribuicao: IDENTIFICADOR OP_ATRIBUICAO expressao
           | FUNCAO OP_ATRIBUICAO expressao { yyerror("Uma função não pode ser alvo de uma atribuição."); }
-          | ELGIO OP_ATRIBUICAO expressao
+          | ELGIO OP_ATRIBUICAO expressao_matematica
           ;
 
 condicional: SE expressao MAIOR expressao PONTO ENTAO PONTO INICIO PONTO comandos FIM PONTO SENAO PONTO INICIO PONTO comandos FIM
@@ -71,7 +71,7 @@ laco: ENQUANTO expressao MAIOR expressao PONTO INICIO PONTO comandos FIM
     | ENQUANTO expressao DIFERENTE expressao PONTO INICIO PONTO comandos FIM
     ;
 
-elgol: ELGIO { $$ = $1; }
+elgol: ELGIO
      ;
 
 corpoDaFuncao: /* vazio */
@@ -98,6 +98,14 @@ comandos: /* vazio */
 
 comando: atribuicao
        ;
+
+
+expressao_matematica: expressao_matematica OP_SOMA expressao_matematica
+                      | expressao_matematica OP_SUBTRACAO expressao_matematica
+                      | expressao_matematica OP_MULTIPLICACAO expressao_matematica
+                      | expressao_matematica OP_DIVISAO expressao_matematica
+                      | IDENTIFICADOR { $$ = $1; }
+                      ;
 
 expressao: expressao OP_SOMA expressao
          | expressao OP_SUBTRACAO expressao 
