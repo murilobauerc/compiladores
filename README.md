@@ -22,7 +22,7 @@ Para executar o trabalho final da AS com Flex (analisador léxico) e Bison (anal
 Acessar a pasta do projeto:
 
 ```sh
-cd compiladores/AS
+cd compiladores-main/AS
 ```
 
 Para executar o Flex/Bison, use o Makefile como guia:
